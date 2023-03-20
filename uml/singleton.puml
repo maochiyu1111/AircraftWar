@@ -1,0 +1,17 @@
+@startuml
+class HeroAircraft {
+- shootNum:int
+- power:int
+- direction:int
+- {static} heroAircraft:HeroAircraft
+-  HeroAircraft(int locationX, int locationY, int speedX, int speedY, int hp)
++ {static} getInstance():HeroAircraft
++ forward():void
++ shoot():List<BaseBullet>
++ hpAdding(int blood):void
++ addShootNum(int num):void
+}
+
+
+HeroAircraft <-- HeroAircraft
+@enduml

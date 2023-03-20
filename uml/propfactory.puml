@@ -1,0 +1,53 @@
+@startuml
+class FirepowerPropFactory {
++ creatProp(int locationX, int locationY):GameProp
+}
+class EliteEnemy {
+- power:int
+- direction:int
++ EliteEnemy(int locationX, int locationY, int speedX, int speedY)
++ forward():void
++ shoot():List<BaseBullet>
++ creatProp():GameProp
+}
+class HpAddPropFactory {
++ creatProp(int locationX, int locationY):GameProp
+}
+abstract class GameProp {
++  GameProp(int locationX, int locationY, int speedX, int speedY)
++ forward():void
++ {abstract}takeEffect():void
+}
+class FirepowerProp {
+- heroAircraft:HeroAircraft
++  FirepowerProp(int locationX, int locationY, int speedX, int speedY)
++ takeEffect():void
+}
+interface PropFactory {
+creatProp(int locationX , int locationY):GameProp
+}
+class HpAddProp {
+- heroAircraft:HeroAircraft
++ HpAddProp(int locationX, int locationY, int speedX, int speedY)
++ takeEffect():void
+}
+class BombProp {
++ BombProp(int locationX, int locationY, int speedX, int speedY)
++ takeEffect():void
+}
+class BombPropFactory {
++ creatProp(int locationX , int locationY):GameProp
+}
+
+
+PropFactory <|.. FirepowerPropFactory
+PropFactory <|.. HpAddPropFactory
+GameProp <|-- FirepowerProp
+GameProp <|-- HpAddProp
+GameProp <|-- BombProp
+PropFactory <|.. BombPropFactory
+BombProp <.. "<<Create>>"BombPropFactory
+HpAddProp <.. "<<Create>>"HpAddPropFactory
+FirepowerProp <.. "<<Create>>"FirepowerPropFactory
+PropFactory <.. EliteEnemy
+@enduml
