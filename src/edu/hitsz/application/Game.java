@@ -4,6 +4,8 @@ import edu.hitsz.aircraft.*;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.basic.AbstractFlyingObject;
 
+import edu.hitsz.factory.base.EnemyFactory;
+import edu.hitsz.factory.implement.BossEnemyFactory;
 import edu.hitsz.factory.implement.EliteEnemyFactory;
 import edu.hitsz.factory.implement.MobEnemyFactory;
 import edu.hitsz.prop.GameProp;
@@ -38,9 +40,8 @@ public class Game extends JPanel {
 
     private final HeroAircraft heroAircraft = HeroAircraft.getInstance();
 
-    private final MobEnemyFactory mobEnemyFactory;
+    private EnemyFactory enemyFactory;
 
-    private final EliteEnemyFactory eliteEnemyFactory;
     private final List<AbstractAircraft> enemyAircrafts;
     private final List<BaseBullet> heroBullets;
     private final List<BaseBullet> enemyBullets;
@@ -58,6 +59,10 @@ public class Game extends JPanel {
      * 当前得分
      */
     private int score = 0;
+
+    //初始分数阈值
+    private int threshold = 500;
+
     /**
      * 当前时刻
      */
@@ -80,8 +85,7 @@ public class Game extends JPanel {
         heroBullets = new LinkedList<>();
         enemyBullets = new LinkedList<>();
         gameProps = new LinkedList<>();
-        mobEnemyFactory = new MobEnemyFactory();
-        eliteEnemyFactory = new EliteEnemyFactory();
+
 
         /**
          * Scheduled 线程池，用于定时任务调度
@@ -111,14 +115,10 @@ public class Game extends JPanel {
                     System.out.println(time);
                     // 新敌机产生
                     if (enemyAircrafts.size() < enemyMaxNumber) {
-                        double i = Math.random();
-                        if(i > 0.8) {
-                            enemyAircrafts.add(eliteEnemyFactory.creatEnemy());
-                        }
-                        else{
-                            enemyAircrafts.add(mobEnemyFactory.creatEnemy());
-                        }
+                        AbstractAircraft enemyAircraft = produceEnemy();
+                        enemyAircrafts.add(enemyAircraft);
                     }
+
                     // 飞机射出子弹
                     shootAction();
                 }
@@ -134,6 +134,9 @@ public class Game extends JPanel {
 
                 // 撞击检测
                 crashCheckAction();
+
+                // 分数检测
+                scoreCheckAction();
 
                 // 后处理
                 postProcessAction();
@@ -179,6 +182,17 @@ public class Game extends JPanel {
         }
     }
 
+    private AbstractAircraft produceEnemy(){
+        double i = Math.random();
+        if(i > 0.8) {
+            enemyFactory = new EliteEnemyFactory();
+        }
+        else{
+            enemyFactory = new MobEnemyFactory();
+        }
+        return enemyFactory.creatEnemy();
+    }
+
 
 
     private void shootAction() {
@@ -214,6 +228,7 @@ public class Game extends JPanel {
             prop.forward();
         }
     }
+
 
 
     /**
@@ -264,6 +279,11 @@ public class Game extends JPanel {
                                 gameProps.add(prop);
                             }
                         }
+                        else if (enemyAircraft instanceof BossEnemy){
+                            score += 50;
+                            gameProps.addAll(((BossEnemy) enemyAircraft).creatProps());
+                        }
+
                         score += 10;
                     }
                 }
@@ -285,7 +305,20 @@ public class Game extends JPanel {
 
     }
 
+    /**
+     * 分数检测，后续可能会添加多个方法到分数检测中
+     * */
+    private void scoreCheckAction(){
+        if (score >= threshold){
+            enemyAircrafts.add(bossProduce());
+            threshold += 500;
+        }
+    }
 
+    private AbstractAircraft bossProduce(){
+        enemyFactory = new BossEnemyFactory();
+        return enemyFactory.creatEnemy();
+    }
 
     /**
      * 后处理：

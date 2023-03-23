@@ -13,7 +13,7 @@ public class FirepowerProp extends GameProp{
     @Override
     public void takeEffect(){
 
-        heroAircraft.addShootNum(1);
+        heroAircraft.addFirePower();
         System.out.println("FirePowerSupply active");
     }
 }

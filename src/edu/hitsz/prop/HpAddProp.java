@@ -12,7 +12,7 @@ public class HpAddProp extends GameProp{
 
     @Override
     public void takeEffect(){
-        heroAircraft.hpAdding(20);
+        heroAircraft.hpAdding(50);
     }
 
 }

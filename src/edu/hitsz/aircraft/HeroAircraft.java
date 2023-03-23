@@ -81,12 +81,14 @@ public class HeroAircraft extends AbstractAircraft {
 
     }
 
-    public void addShootNum( int num){
+    public void addFirePower(){
+        int num = 1;
         if( this.shootNum + num <= 3 ){
             this.shootNum += num;
         }
         else {
             this.shootNum = 3;
+            this.power += 5;
         }
     }
 
