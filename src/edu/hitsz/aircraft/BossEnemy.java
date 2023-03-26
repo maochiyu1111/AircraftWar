@@ -1,9 +1,9 @@
 package edu.hitsz.aircraft;
 
+import edu.hitsz.application.ImageManager;
 import edu.hitsz.application.Main;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.bullet.EnemyBullet;
-import edu.hitsz.bullet.HeroBullet;
 import edu.hitsz.factory.base.PropFactory;
 import edu.hitsz.factory.implement.BombPropFactory;
 import edu.hitsz.factory.implement.FirepowerPropFactory;
@@ -32,6 +32,15 @@ public class BossEnemy extends AbstractAircraft{
         super(locationX, locationY, speedX, speedY, hp);
     }
 
+    @Override
+    public void forward() {
+        locationX += speedX;
+        locationY += speedY;
+        if (locationX <= (int) (0.3*ImageManager.BOSS_ENEMY_IMAGE.getWidth()) || locationX >= Main.WINDOW_WIDTH - (int) (0.3*ImageManager.BOSS_ENEMY_IMAGE.getWidth())) {
+            // 横向超出边界后反向
+            speedX = -speedX;
+        }
+    }
 
     @Override
     public List<BaseBullet> shoot() {
@@ -43,7 +52,7 @@ public class BossEnemy extends AbstractAircraft{
         for(int i=0; i<shootNum; i++){
             // 子弹发射位置相对飞机位置向前偏移
             // 多个子弹横向分散
-            bullet = new EnemyBullet(x + (i*2 - shootNum + 1)*10, y, (i -shootNum /2 )*2 , speedY, power);
+            bullet = new EnemyBullet(x + (i*2 - shootNum + 1)*10, y, this.speedX + (i -shootNum /2 )*2 , speedY, power);
             res.add(bullet);
         }
         return res;

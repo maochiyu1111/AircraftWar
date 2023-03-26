@@ -40,6 +40,8 @@ public class Game extends JPanel {
 
     private final HeroAircraft heroAircraft = HeroAircraft.getInstance();
 
+    protected AbstractAircraft boss;
+
     private EnemyFactory enemyFactory;
 
     private final List<AbstractAircraft> enemyAircrafts;
@@ -61,7 +63,7 @@ public class Game extends JPanel {
     private int score = 0;
 
     //初始分数阈值
-    private int threshold = 500;
+    private int threshold = 200;
 
     /**
      * 当前时刻
@@ -316,8 +318,13 @@ public class Game extends JPanel {
     }
 
     private AbstractAircraft bossProduce(){
+        if (Objects.nonNull(boss)) {
+            boss.vanish();
+            System.out.println("boss刷新");
+        }
         enemyFactory = new BossEnemyFactory();
-        return enemyFactory.creatEnemy();
+        boss = enemyFactory.creatEnemy();
+        return boss;
     }
 
     /**

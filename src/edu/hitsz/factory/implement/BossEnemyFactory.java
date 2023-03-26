@@ -12,7 +12,7 @@ public class BossEnemyFactory implements EnemyFactory {
         return new BossEnemy(
                 (int) (ImageManager.BOSS_ENEMY_IMAGE.getWidth() + Math.random() * (Main.WINDOW_WIDTH - 2 * ImageManager.BOSS_ENEMY_IMAGE.getWidth())),
                 (int) (Main.WINDOW_HEIGHT * 0.05),
-                10,
+                5,
                 0,
                 500);
     }
