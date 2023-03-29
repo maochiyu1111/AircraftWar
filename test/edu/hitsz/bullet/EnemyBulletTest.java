@@ -1,5 +1,6 @@
 package edu.hitsz.bullet;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -10,6 +11,7 @@ class EnemyBulletTest {
     /**
      * 用例编号： EBT-1
      * **/
+    @DisplayName("Test EnemyBullet forward()")
     @Test
     void forward() {
         assertEquals(0, enemyBullet.getLocationY());
@@ -20,6 +22,7 @@ class EnemyBulletTest {
     /**
      * 用例编号： EBT-2
      * **/
+    @DisplayName("Test EnemyBullet getPower()")
     @Test
     void getPower() {
         assertEquals(60, enemyBullet.getPower());
