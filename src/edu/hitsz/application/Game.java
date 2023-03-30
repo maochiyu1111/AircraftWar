@@ -154,7 +154,7 @@ public class Game extends JPanel {
                     System.out.println("Game Over!");
                 }
             }
-            catch ( Exception e){
+            catch (Exception e){
                 System.out.println(e);
             }
 

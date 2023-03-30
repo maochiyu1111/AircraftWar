@@ -5,23 +5,15 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class HpAddPropTest {
 
-    HpAddProp hpAddProp;
+    HpAddProp hpAddProp = new HpAddProp(10,10,0, 5);
     HeroAircraft heroAircraft = HeroAircraft.getInstance();
-
-    @BeforeEach
-    void setUp() {
-        hpAddProp = new HpAddProp(10,10,0, 5);
-    }
-
-    @AfterEach
-    void tearDown() {
-        hpAddProp = null;
-    }
 
     /**
      * 用例编号HAPT-1
@@ -42,9 +34,12 @@ class HpAddPropTest {
      * 用例编号HAPT-2
      * **/
     @DisplayName("Test HpAddProp getLocationY()")
-    @Test
-    void getLocationY() {
+    @ParameterizedTest
+    @CsvSource({"11", "9", "12"})
+    void getLocationY(int location) {
         assertEquals(10, hpAddProp.getLocationY());
+        assertNotEquals(location, hpAddProp.getLocationY());
+
     }
 
 
