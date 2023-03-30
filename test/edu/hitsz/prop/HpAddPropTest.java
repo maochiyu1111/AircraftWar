@@ -1,12 +1,10 @@
 package edu.hitsz.prop;
 
 import edu.hitsz.aircraft.HeroAircraft;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,6 +26,7 @@ class HpAddPropTest {
         assertEquals(1000, heroAircraft.getHp());
         hpAddProp.takeEffect();
         assertEquals(1000, heroAircraft.getHp());
+
     }
 
     /**
@@ -35,10 +34,13 @@ class HpAddPropTest {
      * **/
     @DisplayName("Test HpAddProp getLocationY()")
     @ParameterizedTest
-    @CsvSource({"11", "9", "12"})
+    @ValueSource(ints = { 9, 10, 11, 12 } )
     void getLocationY(int location) {
-        assertEquals(10, hpAddProp.getLocationY());
-        assertNotEquals(location, hpAddProp.getLocationY());
+        if (location == 10) {
+            assertEquals(location, hpAddProp.getLocationY());
+        } else {
+            assertNotEquals(location, hpAddProp.getLocationY());
+        }
 
     }
 

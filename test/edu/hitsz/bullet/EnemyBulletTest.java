@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,9 +27,12 @@ class EnemyBulletTest {
      * **/
     @DisplayName("Test EnemyBullet getPower()")
     @ParameterizedTest
-    @CsvSource({"59", "61", "62"})
+    @ValueSource(ints = { 59, 60, 61, 62 } )
     void getPower(int power) {
-        assertEquals(60, enemyBullet.getPower());
-        assertNotEquals(power, enemyBullet.getPower());
+        if (power == 60) {
+            assertEquals(power, enemyBullet.getPower());
+        } else {
+            assertNotEquals(power, enemyBullet.getPower());
+        }
     }
 }
