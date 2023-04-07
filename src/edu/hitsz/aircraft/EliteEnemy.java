@@ -8,6 +8,8 @@ import edu.hitsz.factory.implement.BombPropFactory;
 import edu.hitsz.factory.implement.FirepowerPropFactory;
 import edu.hitsz.factory.implement.HpAddPropFactory;
 import edu.hitsz.prop.*;
+import edu.hitsz.strategy.ShootingStrategy;
+import edu.hitsz.strategy.concrete.StraightShootingStrategy;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -19,6 +21,8 @@ public class EliteEnemy extends AbstractAircraft{
 
     /*** 子弹射击方向 (向上发射：1，向下发射：-1) */
     private int direction = 1;
+
+    private ShootingStrategy strategy = new StraightShootingStrategy();
 
 
     public EliteEnemy(int locationX, int locationY, int speedX, int speedY, int hp) {
@@ -36,15 +40,7 @@ public class EliteEnemy extends AbstractAircraft{
 
     @Override
     public List<BaseBullet> shoot() {
-        List<BaseBullet> res = new LinkedList<>();
-        int x = this.getLocationX();
-        int y = this.getLocationY() + direction*2;
-        int speedX = 0;
-        int speedY = this.getSpeedY() + direction*5;
-        BaseBullet bullet;
-        bullet = new EnemyBullet(x, y, speedX, speedY, power);
-        res.add(bullet);
-        return res;
+        return strategy.shootBullet(this, this.direction, this.power, 1);
     }
 
     public GameProp creatProp(){

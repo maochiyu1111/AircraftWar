@@ -3,12 +3,13 @@ package edu.hitsz.aircraft;
 import edu.hitsz.application.ImageManager;
 import edu.hitsz.application.Main;
 import edu.hitsz.bullet.BaseBullet;
-import edu.hitsz.bullet.EnemyBullet;
 import edu.hitsz.factory.base.PropFactory;
 import edu.hitsz.factory.implement.BombPropFactory;
 import edu.hitsz.factory.implement.FirepowerPropFactory;
 import edu.hitsz.factory.implement.HpAddPropFactory;
 import edu.hitsz.prop.GameProp;
+import edu.hitsz.strategy.ShootingStrategy;
+import edu.hitsz.strategy.concrete.ScatterShootingStrategy;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -27,6 +28,8 @@ public class BossEnemy extends AbstractAircraft{
 
     private int propNum = 3;
 
+    private ShootingStrategy strategy = new ScatterShootingStrategy();
+
 
     public BossEnemy(int locationX, int locationY, int speedX, int speedY, int hp) {
         super(locationX, locationY, speedX, speedY, hp);
@@ -44,18 +47,7 @@ public class BossEnemy extends AbstractAircraft{
 
     @Override
     public List<BaseBullet> shoot() {
-        List<BaseBullet> res = new LinkedList<>();
-        int x = this.getLocationX();
-        int y = this.getLocationY() + direction*2;
-        int speedY = this.getSpeedY() + direction*5;
-        BaseBullet bullet;
-        for(int i=0; i<shootNum; i++){
-            // 子弹发射位置相对飞机位置向前偏移
-            // 多个子弹横向分散
-            bullet = new EnemyBullet(x + (i*2 - shootNum + 1)*10, y, this.speedX + (i -shootNum /2 )*2 , speedY, power);
-            res.add(bullet);
-        }
-        return res;
+        return strategy.shootBullet(this, this.direction, this.power, this.shootNum);
     }
 
     public List<GameProp> creatProps(){

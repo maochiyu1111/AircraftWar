@@ -4,6 +4,8 @@ import edu.hitsz.application.ImageManager;
 import edu.hitsz.application.Main;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.bullet.HeroBullet;
+import edu.hitsz.strategy.ShootingStrategy;
+import edu.hitsz.strategy.concrete.StraightShootingStrategy;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -15,6 +17,7 @@ import java.util.List;
 public class HeroAircraft extends AbstractAircraft {
 
     /**攻击方式 **/
+    private ShootingStrategy strategy = new StraightShootingStrategy();
 
     /** 子弹一次发射数 **/
     private int shootNum = 1;
@@ -56,19 +59,7 @@ public class HeroAircraft extends AbstractAircraft {
      * @return 射击出的子弹List
      */
     public List<BaseBullet> shoot() {
-        List<BaseBullet> res = new LinkedList<>();
-        int x = this.getLocationX();
-        int y = this.getLocationY() + direction*2;
-        int speedX = 0;
-        int speedY = this.getSpeedY() + direction*10;
-        BaseBullet bullet;
-        for(int i=0; i<shootNum; i++){
-            // 子弹发射位置相对飞机位置向前偏移
-            // 多个子弹横向分散
-            bullet = new HeroBullet(x + (i*2 - shootNum + 1)*10, y, speedX, speedY, power);
-            res.add(bullet);
-        }
-        return res;
+        return strategy.shootBullet(this, -1, this.power, this.shootNum);
     }
 
     public void hpAdding( int blood){
@@ -81,16 +72,12 @@ public class HeroAircraft extends AbstractAircraft {
 
     }
 
-    public void addFirePower(){
-        int num = 1;
-        if( this.shootNum + num <= 3 ){
-            this.shootNum += num;
-        }
-        else {
-            this.shootNum = 3;
-            this.power += 5;
-        }
+    public void setShootNum( int num){
+        this.shootNum = num ;
     }
 
+    public void setStrategy( ShootingStrategy strategy){
+        this.strategy = strategy;
+    }
 
 }

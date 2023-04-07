@@ -4,6 +4,8 @@ import edu.hitsz.aircraft.*;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.basic.AbstractFlyingObject;
 
+import edu.hitsz.dao.User;
+import edu.hitsz.dao.UserDaoImp;
 import edu.hitsz.factory.base.EnemyFactory;
 import edu.hitsz.factory.implement.BossEnemyFactory;
 import edu.hitsz.factory.implement.EliteEnemyFactory;
@@ -152,6 +154,10 @@ public class Game extends JPanel {
                     executorService.shutdown();
                     gameOverFlag = true;
                     System.out.println("Game Over!");
+                    User user = new User("testUserName", score);
+                    UserDaoImp userDaoImp = new UserDaoImp();
+                    userDaoImp.addUser(user);
+                    userDaoImp.getRank();
                 }
             }
             catch (Exception e){
