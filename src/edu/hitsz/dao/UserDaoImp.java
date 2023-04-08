@@ -3,6 +3,7 @@ package edu.hitsz.dao;
 import java.io.*;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -11,53 +12,69 @@ import java.util.List;
  */
 public class UserDaoImp implements UserDao{
 
+    private List<User> userList = new ArrayList<>();
 
-    File userDataFile = new File("src\\edu\\hitsz\\dao\\userRank.dat");
+    private File userDataFile = new File("src\\edu\\hitsz\\dao\\userRank.dat");
+    public UserDaoImp(){
+        if(userDataFile.exists()){
+            try {
+                ObjectInputStream ois = new ObjectInputStream(new FileInputStream(userDataFile));
+                userList = (List<User>) ois.readObject();
+                ois.close();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        else {
+            try {
+                userDataFile.createNewFile();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
 
 
     @Override
-    public void deleteUser(User user) {
+    public void deleteUser(User userDelete) {
+        for (User user : userList){
+            if(user.getUserName().equals(userDelete.getUserName())){
+                userList.remove(user);
+            }
+        }
 
     }
 
     @Override
     public void addUser(User user) {
+        userList.add(user);
+        Collections.sort(userList, (user1, user2) -> Integer.compare(user2.getScore(), user1.getScore()));
         try {
-            FileOutputStream fos = new FileOutputStream(userDataFile, true);
+            FileOutputStream fos = new FileOutputStream(userDataFile);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(user);
+            oos.writeObject(userList);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
     public void getRank() {
-        List<User> userList = new ArrayList<>();
-        try (
-                ObjectInputStream ois = new ObjectInputStream(new FileInputStream(userDataFile))){
-                System.out.println("********************* \n" +
-                        "得分排行榜 \n" +
-                        "*********************");
+        System.out.println("""
+                ********************
+                得分排行榜
+                ********************
+                """);
 
-                try {
-                    while (true) { // 读取所有的User对象
-
-                        List<User> user = (List<User>) ois.readObject();
-                        //userList.add(user);
-                    }
-                } catch (EOFException e) {
-                    // 文件读取结束
-                }
-
-                for (User user : userList){
-                    String score = String.valueOf(user.getScore());
-                    System.out.println("hhh, "+ user.getUserName() + ", "+ score + ", "+ user.getTime());
-                }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        int i = 1;
+        for (User user : userList){
+            //String score = String.valueOf(user.getScore());
+            System.out.println("第"+i+"名：" + user.getUserName() + ", "+ user.getScore() + ", "+ user.getTime());
+            i++;
         }
+
     }
+
 }
