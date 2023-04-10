@@ -1,0 +1,30 @@
+@startuml
+class UserDaoImp {
+- userList:List<User>
+- userDataFile:File
++ <<Create>> UserDaoImp()
++ deleteUser(User):void
++ addUser(User):void
++ getRank():void
+}
+class User {
+- userName:String
+- score:int
+- time:String
++ <<Create>> User(String userName,int score)
++ getUserName():String
++ getScore():int
++ getTime():String
+}
+interface UserDao {
+~ deleteUser(User user):void
+~ addUser(User user):void
+~ getRank():void
+}
+
+interface Serializable{}
+
+UserDao <|.. UserDaoImp
+Serializable <|.. User
+User <--- UserDaoImp
+@enduml

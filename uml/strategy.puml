@@ -1,0 +1,20 @@
+@startuml
+class ScatterShootingStrategy {
++ shootBullet(AbstractAircraft aircraft,int direction, int power, int shootNum):List<BaseBullet>
+}
+interface ShootingStrategy {
+~ shootBullet(AbstractAircraft aircraft,int direction, int power, int shootNum):List<BaseBullet>
+}
+class StraightShootingStrategy {
++ shootBullet(AbstractAircraft aircraft,int direction, int power, int shootNum):List<BaseBullet>
+}
+
+class ContextInAircraft{
++ shoot(ShootingStrategy strategy):List<BaseBullet>
+
+}
+
+ShootingStrategy <|.. ScatterShootingStrategy
+ShootingStrategy <|.. StraightShootingStrategy
+ShootingStrategy <-o  ContextInAircraft
+@enduml
