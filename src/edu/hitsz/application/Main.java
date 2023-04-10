@@ -1,5 +1,8 @@
 package edu.hitsz.application;
 
+import edu.hitsz.application.swing.StartMenu;
+import edu.hitsz.application.swing.UserRank;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -26,9 +29,63 @@ public class Main {
                 WINDOW_WIDTH, WINDOW_HEIGHT);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        Game game = new Game();
-        frame.add(game);
+        StartMenu menu = new StartMenu();
+        JPanel startMenuMainPanel = (JPanel) menu.getMainPanel();
+        frame.add(startMenuMainPanel);
         frame.setVisible(true);
-        game.action();
+
+        Game game = new Game();
+        new Thread(()->{
+            synchronized (ThreadManager.class) {
+                while(!ThreadManager.menuOver) {
+                    try {
+                        ThreadManager.class.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            frame.remove(startMenuMainPanel);
+            frame.add(game);
+            frame.setVisible(true);
+            //将game面板设置为可聚焦的状态，即可以通过键盘或鼠标输入来操作该面板上的控件。
+            game.setFocusable(true);
+            //将焦点设置为game面板，这样用户在与程序交互时，输入的信息会直接作用于该面板上。
+            game.requestFocus();
+            game.action();
+        }).start();
+
+        new Thread(()->{
+            synchronized (ThreadManager.class) {
+                while (!ThreadManager.gameOver) {
+                    try {
+                        ThreadManager.class.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            //展示排行榜
+            UserRank ranking = new UserRank();
+            JPanel rankPanel = UserRank.getMainPanel();
+            frame.remove(game);
+            frame.add(rankPanel);
+            frame.setVisible(true);
+            //展示确认窗口
+            Input input = new Input(Game.getScore(), Game.getDifficulty());
+            JFrame inputFrame = new JFrame("记录分数");
+            input.setSelf(inputFrame);
+            input.setBoard(board);
+            inputFrame.setLocationRelativeTo(null);
+            inputFrame.setContentPane(input.getMainPanel());
+            inputFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            inputFrame.setUndecorated(true);
+            inputFrame.getRootPane().setWindowDecorationStyle(JRootPane.PLAIN_DIALOG);
+            inputFrame.pack();
+            inputFrame.setResizable(false);
+            inputFrame.setVisible(true);
+        }).start();
+
+
     }
 }
