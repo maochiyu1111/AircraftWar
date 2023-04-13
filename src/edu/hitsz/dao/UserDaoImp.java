@@ -1,9 +1,9 @@
 package edu.hitsz.dao;
 
 import java.io.*;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -16,14 +16,21 @@ public class UserDaoImp implements UserDao{
 
     private File userDataFile = new File("src\\edu\\hitsz\\dao\\userRank.dat");
     public UserDaoImp(){
-        if(userDataFile.exists()){
+        if(userDataFile.exists()) {
+            ObjectInputStream ois = null;
             try {
-                ObjectInputStream ois = new ObjectInputStream(new FileInputStream(userDataFile));
+                ois = new ObjectInputStream(new FileInputStream(userDataFile));
                 userList = (List<User>) ois.readObject();
-                ois.close();
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
+            } finally {
+                if (ois != null) {
+                    try {
+                        ois.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }
         else {
@@ -38,43 +45,64 @@ public class UserDaoImp implements UserDao{
 
 
     @Override
-    public void deleteUser(User userDelete) {
-        for (User user : userList){
-            if(user.getUserName().equals(userDelete.getUserName())){
-                userList.remove(user);
-            }
-        }
+    public void deleteUser(int row) {
+        userList.remove(userList.get(row));
+        writeToFile(userList);
 
     }
 
     @Override
     public void addUser(User user) {
         userList.add(user);
-        Collections.sort(userList, (user1, user2) -> Integer.compare(user2.getScore(), user1.getScore()));
-        try {
-            FileOutputStream fos = new FileOutputStream(userDataFile);
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(userList);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        writeToFile(userList);
     }
+
 
     @Override
-    public void getRank() {
-        System.out.println("""
-                ********************
-                得分排行榜
-                ********************
-                """);
-
-        int i = 1;
-        for (User user : userList){
-            //String score = String.valueOf(user.getScore());
-            System.out.println("第"+i+"名：" + user.getUserName() + ", "+ user.getScore() + ", "+ user.getTime());
-            i++;
-        }
-
+    public List<User> getRankedUserList() {
+        readFromFile();
+        Collections.sort(userList, (user1, user2) -> Integer.compare(user2.getScore(), user1.getScore()));
+        return userList;
     }
+
+    private void writeToFile(List<User> userList){
+        ObjectOutputStream oos = null;
+        try {
+            FileOutputStream fos = new FileOutputStream(userDataFile);
+            oos = new ObjectOutputStream(fos);
+            oos.writeObject(userList);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            if(oos != null){
+                try {
+                    oos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    //提供给其他函数的读取文件接口，返回userList列表
+    private void readFromFile(){
+        ObjectInputStream ois = null;
+        try {
+            ois = new ObjectInputStream(new FileInputStream(userDataFile));
+            userList = (List<User>) ois.readObject();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (ois != null) {
+                try {
+                    ois.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
 
 }

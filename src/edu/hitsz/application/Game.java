@@ -1,6 +1,7 @@
 package edu.hitsz.application;
 
 import edu.hitsz.aircraft.*;
+import edu.hitsz.application.swing.UserRank;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.basic.AbstractFlyingObject;
 
@@ -154,10 +155,12 @@ public class Game extends JPanel {
                     executorService.shutdown();
                     gameOverFlag = true;
                     System.out.println("Game Over!");
-                    User user = new User("testUserName", score);
-                    UserDaoImp userDaoImp = new UserDaoImp();
-                    userDaoImp.addUser(user);
-                    userDaoImp.getRank();
+                    //展示排行榜
+                    UserRank userRank = new UserRank();
+                    JPanel rankPanel = userRank.getMainPanel();
+                    Main.cardPanel.add(rankPanel);
+                    Main.cardLayout.last(Main.cardPanel);
+                    userRank.inputUserName(score);
                 }
             }
             catch (Exception e){

@@ -1,7 +1,6 @@
 package edu.hitsz.application.swing;
 
-import edu.hitsz.application.ImageManager;
-import edu.hitsz.application.ThreadManager;
+import edu.hitsz.application.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -25,15 +24,15 @@ public class StartMenu {
     private JPanel musicPanel;
 
 
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("StartMenu");
-        frame.setContentPane(new StartMenu().mainPanel);
-        //设置窗口关闭时的默认操作，这里是终止程序。
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //使窗口大小适合其内容
-        frame.pack();
-        frame.setVisible(true);
-    }
+//    public static void main(String[] args) {
+//        JFrame frame = new JFrame("StartMenu");
+//        frame.setContentPane(new StartMenu().mainPanel);
+//        //设置窗口关闭时的默认操作，这里是终止程序。
+//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        //使窗口大小适合其内容
+//        frame.pack();
+//        frame.setVisible(true);
+//    }
 
     public StartMenu() {
         easyButton.addActionListener(new ActionListener() {
@@ -45,11 +44,12 @@ public class StartMenu {
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
-                ThreadManager.menuOver = true;
+                Game game = new Game();
+                Main.cardPanel.add(game);
+                Main.cardLayout.last(Main.cardPanel);
+                game.action();
                 //Game.setNeedMusic(music.getSelectedIndex() == 0);
-                synchronized (ThreadManager.class) {
-                    ThreadManager.class.notifyAll();
-                }
+
             }
         });
 
@@ -62,11 +62,10 @@ public class StartMenu {
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
-                ThreadManager.menuOver = true;
-                //Game.setNeedMusic(music.getSelectedIndex() == 0);
-                synchronized (ThreadManager.class) {
-                    ThreadManager.class.notifyAll();
-                }
+                Game game = new Game();
+                Main.cardPanel.add(game);
+                Main.cardLayout.last(Main.cardPanel);
+                game.action();
             }
         });
 
@@ -79,11 +78,10 @@ public class StartMenu {
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
-                ThreadManager.menuOver = true;
-                //Game.setNeedMusic(music.getSelectedIndex() == 0);
-                synchronized (ThreadManager.class) {
-                    ThreadManager.class.notifyAll();
-                }
+                Game game = new Game();
+                Main.cardPanel.add(game);
+                Main.cardLayout.last(Main.cardPanel);
+                game.action();
             }
         });
 
@@ -91,7 +89,14 @@ public class StartMenu {
         musicRadioButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            //TODO：线程启动
+                MusicThread musicThread = new MusicThread( "src/videos/bgm.wav");
+                if(musicRadioButton.isSelected()){
+                    musicThread.setLoop(true);
+                    musicThread.start();
+                }
+                else {
+                    musicThread.setStop(true);
+                }
             }
         });
 
