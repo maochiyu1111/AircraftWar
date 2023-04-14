@@ -1,12 +1,13 @@
-package edu.hitsz.application;
+package edu.hitsz.application.game;
 
 import edu.hitsz.aircraft.*;
+import edu.hitsz.application.*;
+import edu.hitsz.application.swing.StartMenu;
 import edu.hitsz.application.swing.UserRank;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.basic.AbstractFlyingObject;
 
-import edu.hitsz.dao.User;
-import edu.hitsz.dao.UserDaoImp;
+
 import edu.hitsz.factory.base.EnemyFactory;
 import edu.hitsz.factory.implement.BossEnemyFactory;
 import edu.hitsz.factory.implement.EliteEnemyFactory;
@@ -26,7 +27,7 @@ import java.util.concurrent.*;
  *
  * @author hitsz
  */
-public class Game extends JPanel {
+public abstract class Game extends JPanel {
 
 
     private int backGroundTop = 0;
@@ -79,6 +80,28 @@ public class Game extends JPanel {
      */
     private int cycleDuration = 600;
     private int cycleTime = 0;
+
+    public static boolean isNeedMusic() {
+        return needMusic;
+    }
+
+    public static void setNeedMusic(boolean needMusic) {
+        Game.needMusic = needMusic;
+    }
+
+    private static boolean needMusic = false;
+
+    MusicThread bossBgmThread = new MusicThread(VideoManager.BOSS_VIDEO);
+
+    public static void setDifficulty(String difficulty) {
+        Game.difficulty = difficulty;
+    }
+
+    private static String difficulty;
+
+    public static String getDifficulty() {
+        return difficulty;
+    }
 
     /**
      * 游戏结束标志
@@ -143,6 +166,9 @@ public class Game extends JPanel {
                 // 分数检测
                 scoreCheckAction();
 
+                // 音效检测
+                musicCheck();
+
                 // 后处理
                 postProcessAction();
 
@@ -155,6 +181,13 @@ public class Game extends JPanel {
                     executorService.shutdown();
                     gameOverFlag = true;
                     System.out.println("Game Over!");
+                    if(needMusic){
+                        StartMenu.bgmThread.setStop(true);
+                        bossBgmThread.setStop(true);
+                        MusicThread gameOverThread = new MusicThread(VideoManager.GAME_OVER_VIDEO);
+                        gameOverThread.start();
+                    }
+
                     //展示排行榜
                     UserRank userRank = new UserRank();
                     JPanel rankPanel = userRank.getMainPanel();
@@ -277,11 +310,16 @@ public class Game extends JPanel {
                 }
                 if (enemyAircraft.crash(bullet)) {
                     // 敌机撞击到英雄机子弹
+                    if(needMusic){
+                        MusicThread hitThread = new MusicThread(VideoManager.BULLET_HIT_VIDEO);
+                        hitThread.start();
+                    }
+
                     // 敌机损失一定生命值
                     enemyAircraft.decreaseHp(bullet.getPower());
                     bullet.vanish();
                     if (enemyAircraft.notValid()) {
-                        // TODO 获得分数，产生道具补给
+                        //获得分数，产生道具补给
                         if(enemyAircraft instanceof EliteEnemy){
                             //分数+道具
                             score += 20;
@@ -334,6 +372,33 @@ public class Game extends JPanel {
         enemyFactory = new BossEnemyFactory();
         boss = enemyFactory.creatEnemy();
         return boss;
+    }
+
+    private void musicCheck() {
+        //boss音乐
+        if(needMusic){
+            if (Objects.isNull(boss) || boss.notValid()) {
+                bossBgmThread.setStop(true);
+                bossBgmThread.setLoop(false);
+                StartMenu.bgmThread.setStop(false);
+                synchronized (StartMenu.bgmThread) {
+                    StartMenu.bgmThread.notifyAll();
+                }
+
+            } else {
+                StartMenu.bgmThread.setStop(true);
+                bossBgmThread.setLoop(true);
+                bossBgmThread.setStop(false);
+                try {
+                    bossBgmThread.start();
+                }catch (Exception ex){
+                    synchronized (bossBgmThread) {
+                        bossBgmThread.notifyAll();
+                    }
+                }
+            }
+        }
+
     }
 
     /**

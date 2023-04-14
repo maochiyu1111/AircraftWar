@@ -1,6 +1,10 @@
 package edu.hitsz.application.swing;
 
 import edu.hitsz.application.*;
+import edu.hitsz.application.game.EasyGame;
+import edu.hitsz.application.game.Game;
+import edu.hitsz.application.game.HardGame;
+import edu.hitsz.application.game.MediumGame;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -23,16 +27,8 @@ public class StartMenu {
     private JPanel modePanel;
     private JPanel musicPanel;
 
+    public static MusicThread bgmThread = new MusicThread(VideoManager.BGM_VIDEO);
 
-//    public static void main(String[] args) {
-//        JFrame frame = new JFrame("StartMenu");
-//        frame.setContentPane(new StartMenu().mainPanel);
-//        //设置窗口关闭时的默认操作，这里是终止程序。
-//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        //使窗口大小适合其内容
-//        frame.pack();
-//        frame.setVisible(true);
-//    }
 
     public StartMenu() {
         easyButton.addActionListener(new ActionListener() {
@@ -44,11 +40,10 @@ public class StartMenu {
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
-                Game game = new Game();
+                Game game = new EasyGame();
                 Main.cardPanel.add(game);
                 Main.cardLayout.last(Main.cardPanel);
                 game.action();
-                //Game.setNeedMusic(music.getSelectedIndex() == 0);
 
             }
         });
@@ -62,7 +57,7 @@ public class StartMenu {
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
-                Game game = new Game();
+                Game game = new MediumGame();
                 Main.cardPanel.add(game);
                 Main.cardLayout.last(Main.cardPanel);
                 game.action();
@@ -78,7 +73,7 @@ public class StartMenu {
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
-                Game game = new Game();
+                Game game = new HardGame();
                 Main.cardPanel.add(game);
                 Main.cardLayout.last(Main.cardPanel);
                 game.action();
@@ -89,13 +84,22 @@ public class StartMenu {
         musicRadioButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                MusicThread musicThread = new MusicThread( "src/videos/bgm.wav");
+
                 if(musicRadioButton.isSelected()){
-                    musicThread.setLoop(true);
-                    musicThread.start();
+                    Game.setNeedMusic(true);
+                    bgmThread.setLoop(true);
+                    bgmThread.setStop(false);
+                    try {
+                        bgmThread.start();
+                    }catch (Exception ex){
+                        synchronized (bgmThread) {
+                            bgmThread.notifyAll();
+                        }
+                    }
                 }
                 else {
-                    musicThread.setStop(true);
+                    bgmThread.setStop(true);
+                    Game.setNeedMusic(false);
                 }
             }
         });

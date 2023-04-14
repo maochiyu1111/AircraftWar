@@ -2,6 +2,7 @@ package edu.hitsz.prop;
 
 import edu.hitsz.aircraft.HeroAircraft;
 import edu.hitsz.application.Main;
+import edu.hitsz.application.MusicThread;
 import edu.hitsz.basic.AbstractFlyingObject;
 
 /**

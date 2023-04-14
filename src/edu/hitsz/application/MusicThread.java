@@ -100,7 +100,6 @@ public class MusicThread extends Thread {
                 if (numBytesRead != -1) {
                     dataLine.write(buffer, 0, numBytesRead);
                 }
-                System.out.println("我还在读"+"isStop="+isStop);
             }
 
         } catch (IOException ex) {
@@ -108,7 +107,6 @@ public class MusicThread extends Thread {
         }finally {
             if(!isStop){
                 dataLine.drain();
-                //dataLine.stop();
             }
             dataLine.close();
         }
@@ -121,10 +119,15 @@ public class MusicThread extends Thread {
                 InputStream stream = new ByteArrayInputStream(samples);
                 play(stream);
                 //如果循环标志变量为true，则进行循环播放
-                if (isLoop) {
+                if (isStop){
+                    synchronized (this){
+                        this.wait();
+                    }
+                } else if (isLoop) {
                     //重置音频流的指针，将其回到音频流的起始位置
                     stream.reset();
-                } else {
+                }
+                 else {
                     break;
                 }
             }
@@ -132,6 +135,8 @@ public class MusicThread extends Thread {
             ex.printStackTrace();
         }
     }
+
+
 }
 
 
