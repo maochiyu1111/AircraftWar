@@ -1,5 +1,7 @@
 package edu.hitsz.dao;
 
+import edu.hitsz.application.game.Game;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,8 +15,18 @@ public class UserDaoImp implements UserDao{
 
     private List<User> userList = new ArrayList<>();
 
-    private File userDataFile = new File("src\\edu\\hitsz\\dao\\userRank.dat");
+    private File userDataFile ;
     public UserDaoImp(){
+        if(Game.getDifficulty().equals("easy")){
+            userDataFile = new File("src\\edu\\hitsz\\dao\\userRankEasy.dat");
+        }
+        else if(Game.getDifficulty().equals("medium")){
+            userDataFile = new File("src\\edu\\hitsz\\dao\\userRankMedium.dat");
+        }
+        else {
+            userDataFile = new File("src\\edu\\hitsz\\dao\\userRankHard.dat");
+        }
+
         if(userDataFile.exists()) {
             ObjectInputStream ois = null;
             try {

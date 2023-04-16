@@ -1,5 +1,6 @@
 package edu.hitsz.application.swing;
 
+import edu.hitsz.application.game.Game;
 import edu.hitsz.dao.User;
 import edu.hitsz.dao.UserDaoImp;
 import org.apache.commons.lang3.ObjectUtils;
@@ -38,16 +39,17 @@ public class UserRank {
 
     public UserRank() {
 
-//        String diffStr = "难度：";
-//        if (diffNum == 0) {
-//            diffStr += "简单";
-//        } else if (diffNum == 1) {
-//            diffStr += "普通";
-//        } else if (diffNum == 2) {
-//            diffStr += "困难";
-//        }
-//        difficulty.setText(diffStr);
-//    }
+        String diffStr = "难度：";
+        if (Game.getDifficulty().equals("easy")) {
+            System.out.println("set easy");
+            diffStr += "简单";
+        } else if (Game.getDifficulty().equals("medium")) {
+            diffStr += "普通";
+        } else if (Game.getDifficulty().equals("hard")) {
+            diffStr += "困难";
+        }
+        difficultyTextField.setText(diffStr);
+
 
         //获取表格数据
         tableGetData();
@@ -125,6 +127,8 @@ public class UserRank {
         userList = userDaoImp.getRankedUserList();
         tableGetData();
     }
+
+
 }
 
 

@@ -40,6 +40,7 @@ public class StartMenu {
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
+                Game.setDifficulty("easy");
                 Game game = new EasyGame();
                 Main.cardPanel.add(game);
                 Main.cardLayout.last(Main.cardPanel);
@@ -57,6 +58,7 @@ public class StartMenu {
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
+                Game.setDifficulty("medium");
                 Game game = new MediumGame();
                 Main.cardPanel.add(game);
                 Main.cardLayout.last(Main.cardPanel);
@@ -73,6 +75,7 @@ public class StartMenu {
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
+                Game.setDifficulty("hard");
                 Game game = new HardGame();
                 Main.cardPanel.add(game);
                 Main.cardLayout.last(Main.cardPanel);
