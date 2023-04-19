@@ -25,7 +25,8 @@ public class UserRank {
 
     private UserDaoImp userDaoImp = new UserDaoImp();
 
-    private List<User> userList = userDaoImp.getRankedUserList();
+    List<User> userList = null;
+
 
     private String[] columnName = {"名次","用户名","玩家得分","游戏时间"};
 
@@ -34,6 +35,8 @@ public class UserRank {
     public JPanel getMainPanel() {
         return mainPanel;
     }
+
+    private DefaultTableModel model;
 
 
 
@@ -54,17 +57,6 @@ public class UserRank {
         //获取表格数据
         tableGetData();
 
-        //表格模型
-        DefaultTableModel model = new DefaultTableModel(tableData, columnName) {
-            @Override
-            public boolean isCellEditable(int row, int col) {
-                return false;
-            }
-        };
-        //JTable并不存储自己的数据，而是从表格模型那里获取它的数据
-        userTable.setModel(model);
-        tableScrollPanel.setViewportView(userTable);
-
 
         //删除按键响应
         deleteButton.addActionListener(e -> {
@@ -77,7 +69,7 @@ public class UserRank {
                 userDaoImp.deleteUser(row);
             }
             //每次删除完后要fresh一下列表，重新读取文件，重新排序。
-            refresh();
+            tableGetData();
         });
 
     }
@@ -89,16 +81,18 @@ public class UserRank {
         userName = JOptionPane.showInputDialog(tableScrollPanel, "游戏结束，您的得分为"+score+"，"
                 +"请输入名字记录得分。");
         if ( null == userName || userName.equals("")) {
-            JOptionPane.showMessageDialog(null, "未能正常记录分数", "warning",JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "未能记录分数", "warning",JOptionPane.WARNING_MESSAGE);
         }
         else {
             User user = new User(userName, score);
             userDaoImp.addUser(user);
-            refresh();
+            //refresh table
+            tableGetData();
         }
     }
 
     private void tableGetData(){
+        userList = userDaoImp.getRankedUserList();
         int userNum = userList.size();
         tableData = new String[userNum][4];
         for (int i = 0; i < userNum; i++) {
@@ -110,7 +104,7 @@ public class UserRank {
         }
 
         //重新设置，model模型
-        DefaultTableModel model = new DefaultTableModel(tableData, columnName){
+        model = new DefaultTableModel(tableData, columnName){
             @Override
             public boolean isCellEditable(int row, int col){
                 return false;
@@ -121,11 +115,6 @@ public class UserRank {
         userTable.setModel(model);
         tableScrollPanel.setViewportView(userTable);
 
-    }
-
-    public void refresh(){
-        userList = userDaoImp.getRankedUserList();
-        tableGetData();
     }
 
 

@@ -30,8 +30,12 @@ public class UserDaoImp implements UserDao{
         if(userDataFile.exists()) {
             ObjectInputStream ois = null;
             try {
-                ois = new ObjectInputStream(new FileInputStream(userDataFile));
-                userList = (List<User>) ois.readObject();
+                if (userDataFile.length() == 0) {
+                    userList = new ArrayList<User>();
+                }else {
+                    ois = new ObjectInputStream(new FileInputStream(userDataFile));
+                    userList = (List<User>) ois.readObject();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -57,6 +61,7 @@ public class UserDaoImp implements UserDao{
 
     @Override
     public void deleteUser(int row) {
+        readFromFile();
         userList.remove(userList.get(row));
         writeToFile(userList);
 
@@ -64,6 +69,7 @@ public class UserDaoImp implements UserDao{
 
     @Override
     public void addUser(User user) {
+        readFromFile();
         userList.add(user);
         writeToFile(userList);
     }
@@ -100,8 +106,12 @@ public class UserDaoImp implements UserDao{
     private void readFromFile(){
         ObjectInputStream ois = null;
         try {
-            ois = new ObjectInputStream(new FileInputStream(userDataFile));
-            userList = (List<User>) ois.readObject();
+            if (userDataFile.length() == 0) {
+                userList = new ArrayList<User>();
+            }else {
+                ois = new ObjectInputStream(new FileInputStream(userDataFile));
+                userList = (List<User>) ois.readObject();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

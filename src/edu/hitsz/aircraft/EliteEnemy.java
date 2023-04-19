@@ -47,12 +47,12 @@ public class EliteEnemy extends AbstractAircraft{
         double randNum = Math.random();
         PropFactory propFactory = null;
         if(randNum < 0.3){
-            propFactory = new FirepowerPropFactory();  //BombPropFactory();
+            propFactory = new BombPropFactory();
         } else if (0.3 < randNum && randNum < 0.6) {
             propFactory = new FirepowerPropFactory();
         }
         else if(0.6< randNum && randNum < 0.9){
-            propFactory = new FirepowerPropFactory();   //HpAddPropFactory();
+            propFactory = new HpAddPropFactory();
         }
         else {
             return null;
