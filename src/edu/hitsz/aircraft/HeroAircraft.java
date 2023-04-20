@@ -4,6 +4,7 @@ import edu.hitsz.application.ImageManager;
 import edu.hitsz.application.Main;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.bullet.HeroBullet;
+import edu.hitsz.observer.Observer;
 import edu.hitsz.strategy.ShootingStrategy;
 import edu.hitsz.strategy.concrete.StraightShootingStrategy;
 
@@ -14,7 +15,7 @@ import java.util.List;
  * 英雄飞机，游戏玩家操控
  * @author hitsz
  */
-public class HeroAircraft extends AbstractAircraft {
+public class HeroAircraft extends AbstractAircraft{
 
     /**攻击方式 **/
     private ShootingStrategy strategy = new StraightShootingStrategy();

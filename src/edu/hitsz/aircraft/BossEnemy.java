@@ -2,11 +2,13 @@ package edu.hitsz.aircraft;
 
 import edu.hitsz.application.ImageManager;
 import edu.hitsz.application.Main;
+import edu.hitsz.application.game.Game;
 import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.factory.base.PropFactory;
 import edu.hitsz.factory.implement.BombPropFactory;
 import edu.hitsz.factory.implement.FirepowerPropFactory;
 import edu.hitsz.factory.implement.HpAddPropFactory;
+import edu.hitsz.observer.Observer;
 import edu.hitsz.prop.GameProp;
 import edu.hitsz.strategy.ShootingStrategy;
 import edu.hitsz.strategy.concrete.ScatterShootingStrategy;
@@ -17,7 +19,7 @@ import java.util.List;
 /**
  * @author Qing
  */
-public class BossEnemy extends AbstractAircraft{
+public class BossEnemy extends AbstractAircraft implements Observer {
     /** 子弹伤害 **/
     private int power = 50;
 
@@ -68,5 +70,13 @@ public class BossEnemy extends AbstractAircraft{
         }
 
         return res;
+    }
+
+    @Override
+    public void update() {
+        this.changeHP(-100);
+        if(!this.isValid){
+            Game.changeScore(50);
+        }
     }
 }

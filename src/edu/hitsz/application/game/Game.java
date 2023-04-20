@@ -8,10 +8,12 @@ import edu.hitsz.bullet.BaseBullet;
 import edu.hitsz.basic.AbstractFlyingObject;
 
 
+import edu.hitsz.bullet.EnemyBullet;
 import edu.hitsz.factory.base.EnemyFactory;
 import edu.hitsz.factory.implement.BossEnemyFactory;
 import edu.hitsz.factory.implement.EliteEnemyFactory;
 import edu.hitsz.factory.implement.MobEnemyFactory;
+import edu.hitsz.prop.BombProp;
 import edu.hitsz.prop.GameProp;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
@@ -64,7 +66,10 @@ public abstract class Game extends JPanel {
     /**
      * 当前得分
      */
-    private int score = 0;
+    private static int score = 0;
+    public static void changeScore(int num){
+        score += num;
+    }
 
     //初始分数阈值
     private int threshold = 200;
@@ -93,11 +98,11 @@ public abstract class Game extends JPanel {
 
     MusicThread bossBgmThread = new MusicThread(VideoManager.BOSS_VIDEO);
 
+    private static String difficulty;
+
     public static void setDifficulty(String difficulty) {
         Game.difficulty = difficulty;
     }
-
-    private static String difficulty;
 
     public static String getDifficulty() {
         return difficulty;
@@ -347,6 +352,14 @@ public abstract class Game extends JPanel {
         // Todo: 我方获得道具，道具生效
         for (GameProp prop :gameProps ){
             if (prop.crash(heroAircraft) || heroAircraft.crash(prop)){
+                if(prop instanceof BombProp) {
+                    for (BaseBullet enemyBullet : enemyBullets) {
+                        ((BombProp) prop).subscribe(enemyBullet);
+                    }
+                    for (AbstractAircraft enemyAircraft : enemyAircrafts){
+                        ((BombProp) prop).subscribe(enemyAircraft);
+                    }
+                }
                 prop.takeEffect();
                 prop.vanish();
             }

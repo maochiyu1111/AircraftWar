@@ -1,7 +1,9 @@
 package edu.hitsz.aircraft;
 
 import edu.hitsz.application.Main;
+import edu.hitsz.application.game.Game;
 import edu.hitsz.bullet.BaseBullet;
+import edu.hitsz.observer.Observer;
 import edu.hitsz.strategy.ShootingStrategy;
 import edu.hitsz.strategy.concrete.StraightShootingStrategy;
 
@@ -14,7 +16,7 @@ import java.util.List;
  *
  * @author hitsz
  */
-public class MobEnemy extends AbstractAircraft {
+public class MobEnemy extends AbstractAircraft implements Observer {
     private int power = 10;
 
     private int direction = 1;
@@ -40,4 +42,10 @@ public class MobEnemy extends AbstractAircraft {
         return strategy.shootBullet(this, this.direction, this.power, 1);
     }
 
+    @Override
+    public void update() {
+        this.notValid();
+        this.vanish();
+        Game.changeScore(10);
+    }
 }
