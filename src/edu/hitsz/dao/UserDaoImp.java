@@ -61,7 +61,7 @@ public class UserDaoImp implements UserDao{
 
     @Override
     public void deleteUser(int row) {
-        readFromFile();
+        userList = getRankedUserList();
         userList.remove(userList.get(row));
         writeToFile(userList);
 
@@ -69,7 +69,7 @@ public class UserDaoImp implements UserDao{
 
     @Override
     public void addUser(User user) {
-        readFromFile();
+        userList = getRankedUserList();
         userList.add(user);
         writeToFile(userList);
     }

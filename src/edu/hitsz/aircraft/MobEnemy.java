@@ -28,6 +28,11 @@ public class MobEnemy extends AbstractAircraft implements Observer {
     }
 
     @Override
+    public List<BaseBullet> shoot() {
+        return new LinkedList<>();
+    }
+
+    @Override
     public void forward() {
         super.forward();
         // 判定 y 轴向下飞行出界
@@ -36,11 +41,6 @@ public class MobEnemy extends AbstractAircraft implements Observer {
         }
     }
 
-    @Override
-    public List<BaseBullet> shoot() {
-
-        return strategy.shootBullet(this, this.direction, this.power, 1);
-    }
 
     @Override
     public void update() {

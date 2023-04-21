@@ -4,6 +4,7 @@ import edu.hitsz.aircraft.AbstractAircraft;
 import edu.hitsz.aircraft.MobEnemy;
 import edu.hitsz.application.ImageManager;
 import edu.hitsz.application.Main;
+import edu.hitsz.application.game.Game;
 import edu.hitsz.factory.base.EnemyFactory;
 
 public class MobEnemyFactory implements EnemyFactory {
@@ -11,7 +12,7 @@ public class MobEnemyFactory implements EnemyFactory {
         return new MobEnemy( (int) (ImageManager.MOB_ENEMY_IMAGE.getWidth() + Math.random() * (Main.WINDOW_WIDTH - 2 * ImageManager.MOB_ENEMY_IMAGE.getWidth())),
                 (int) (Math.random() * Main.WINDOW_HEIGHT * 0.05),
                 0,
-                10,
-                30);
+                (int) (10 * Game.speedMultiplier),
+                (int) (30* Game.HPMultiplier));
     }
 }

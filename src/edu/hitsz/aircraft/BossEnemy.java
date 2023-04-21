@@ -26,6 +26,16 @@ public class BossEnemy extends AbstractAircraft implements Observer {
     /*** 子弹射击方向 (向上发射：1，向下发射：-1) */
     private int direction = 1;
 
+
+    public void changeShootNum(int num) {
+        if(num + this.shootNum <= 6 ){
+            this.shootNum += num;
+        }
+        else {
+            this.shootNum = 6;
+        }
+    }
+
     private int shootNum = 3;
 
     private int propNum = 3;

@@ -27,6 +27,7 @@ public class FirepowerProp extends GameProp{
 
     @Override
     public void takeEffect(){
+        heroAircraft.changeShootNum(1);
         //若上一个线程还在生效，则不创建新线程，火力道具无效
         if(isEffective == false){
             Thread powerUpThread = new Thread(powerUp);
@@ -39,7 +40,6 @@ public class FirepowerProp extends GameProp{
         @Override
         public void run() {
             isEffective = true;
-            heroAircraft.setShootNum(3);
             heroAircraft.setStrategy(new ScatterShootingStrategy());
             if (Game.isNeedMusic()){
                 MusicThread propThread = new MusicThread(VideoManager.GET_SUPPLY_VIDEO);
@@ -51,7 +51,6 @@ public class FirepowerProp extends GameProp{
                 e.printStackTrace();
             }
             // 火力道具效果结束，主角攻击力恢复原来值
-            heroAircraft.setShootNum(1);
             heroAircraft.setStrategy(new StraightShootingStrategy());
             isEffective = false;
         }

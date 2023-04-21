@@ -43,7 +43,7 @@ public class HeroAircraft extends AbstractAircraft{
     private static HeroAircraft heroAircraft = new HeroAircraft(
             Main.WINDOW_WIDTH / 2,
             Main.WINDOW_HEIGHT - ImageManager.HERO_IMAGE.getHeight() ,
-            0, 0, 1000);
+            0, 0, 100000);
 
     public static HeroAircraft getInstance(){
         return heroAircraft;
@@ -73,8 +73,14 @@ public class HeroAircraft extends AbstractAircraft{
 
     }
 
-    public void setShootNum( int num){
-        this.shootNum = num ;
+    public void changeShootNum(int num){
+        if(this.shootNum + num <= 3){
+            this.shootNum += num ;
+        }
+        else {
+            this.shootNum = 3;
+        }
+
     }
 
     public void setStrategy( ShootingStrategy strategy){
