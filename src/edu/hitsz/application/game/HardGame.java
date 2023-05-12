@@ -2,29 +2,20 @@ package edu.hitsz.application.game;
 
 import edu.hitsz.aircraft.AbstractAircraft;
 import edu.hitsz.aircraft.BossEnemy;
-import edu.hitsz.aircraft.EliteEnemy;
+
 import edu.hitsz.application.*;
-import edu.hitsz.application.swing.StartMenu;
-import edu.hitsz.application.swing.UserRank;
-import edu.hitsz.bullet.BaseBullet;
-import edu.hitsz.factory.base.EnemyFactory;
+
 import edu.hitsz.factory.implement.BossEnemyFactory;
-import edu.hitsz.factory.implement.EliteEnemyFactory;
-import edu.hitsz.factory.implement.MobEnemyFactory;
-import edu.hitsz.prop.BombProp;
-import edu.hitsz.prop.GameProp;
-import org.apache.commons.lang3.concurrent.BasicThreadFactory;
+
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.LinkedList;
-import java.util.List;
+
 import java.util.Objects;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+
 
 /**
  * @author qingzhengyu1111@outlook.com
@@ -36,10 +27,12 @@ public class HardGame extends Game {
 
     private boolean hasChangedBg = false;
 
+    private int thresholdInterval = 500;
+
     public HardGame(){
         super();
         cycleDuration = 600;
-        threshold = 300;
+        threshold = 400;
         timeInterval = 40;
         enemyMaxNumber = 6;
         elitePosibility = 0.3;
@@ -48,23 +41,19 @@ public class HardGame extends Game {
 
     @Override
     protected void convertShootFlag() {}
-    // 敌机射击
+
 
 
     @Override
     protected void scoreCheckAction() {
         if (score >= threshold){
             enemyAircrafts.add(bossProduce());
-            threshold += 500;
-            HPMultiplier += 0.15;
-            speedMultiplier += 0.1;
+            threshold += thresholdInterval;
             bossFlag += 1;
-            elitePosibility += 0.05;
             if(cycleDuration >= 440){
                 cycleDuration -= 40;
             }
-            System.out.println("当前速度倍率"+speedMultiplier + "，当前血量倍率"+HPMultiplier+"，当前产生精英机的概率"
-            +elitePosibility);
+            thresholdInterval += 100;
         }
 
         if (score >= 1000 && !hasChangedBg) {
@@ -78,6 +67,22 @@ public class HardGame extends Game {
         }
     }
 
+    @Override
+    protected void timeCheckAction() {
+        if(time > timeThreshold){
+            timeThreshold += 5000;
+            HPMultiplier += 0.03;
+            speedMultiplier += 0.03;
+            if(elitePosibility + 0.02 <= 0.61 ){
+                elitePosibility += 0.02;
+            }
+            System.out.println("当前速度倍率" + String.format("%.2f", speedMultiplier)
+                    + "，当前血量倍率" + String.format("%.2f", HPMultiplier)
+                    + "，当前产生精英机的概率" + String.format("%.2f", elitePosibility));
+
+        }
+    }
+
     private AbstractAircraft bossProduce(){
         if (Objects.nonNull(boss)) {
             boss.vanish();
@@ -85,6 +90,8 @@ public class HardGame extends Game {
         }
         enemyFactory = new BossEnemyFactory();
         boss = enemyFactory.creatEnemy();
+
+        //每次boss出现，在原来的基础上加100生命值
         boss.changeHP(100*bossFlag);
         Class bossclass = BossEnemy.class;
         Method changeShootNum = null;
@@ -99,6 +106,17 @@ public class HardGame extends Game {
             ex.printStackTrace();
         }
         System.out.println("当前boss血量：" + boss.getHp());
+
+        //设置boss出场特效线程
+        new Thread(()->{
+            bossAppearance = true;
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            bossAppearance = false;
+        }).start();
         return boss;
     }
 

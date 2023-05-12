@@ -12,7 +12,9 @@ import java.util.Objects;
  * @date 2023/4/14 22:29
  */
 public class MediumGame extends Game{
-    private int bossFlag = 0;
+
+    private int thresholdInterval = 500;
+
     public MediumGame(){
         super();
         cycleDuration = 520;
@@ -26,29 +28,49 @@ public class MediumGame extends Game{
     @Override
     protected void convertShootFlag() {}
 
+    @Override
+    protected void timeCheckAction() {
+        if(time > timeThreshold){
+            timeThreshold += 7000;
+            HPMultiplier += 0.02;
+            speedMultiplier += 0.02;
+            if(elitePosibility + 0.02 <= 0.51 ){
+                elitePosibility += 0.02;
+            }
+            System.out.println("当前速度倍率" + String.format("%.2f", speedMultiplier)
+                    + "，当前血量倍率" + String.format("%.2f", HPMultiplier)
+                    + "，当前产生精英机的概率" + String.format("%.2f", elitePosibility));
+        }
+    }
 
 
     @Override
     protected void scoreCheckAction() {
         if (score >= threshold){
             enemyAircrafts.add(bossProduce());
-            threshold += 600;
-            HPMultiplier += 0.12;
-            speedMultiplier += 0.08;
-            elitePosibility += 0.04;
-            bossFlag += 1;
-            System.out.println("当前速度倍率"+speedMultiplier + "，当前血量倍率"+HPMultiplier);
+            threshold += thresholdInterval;
+            thresholdInterval += 100;
         }
     }
 
     private AbstractAircraft bossProduce(){
         if (Objects.nonNull(boss)) {
             boss.vanish();
-            System.out.println("boss刷新");
+            System.out.println("boss未被消灭，已刷新重置");
         }
         enemyFactory = new BossEnemyFactory();
         boss = enemyFactory.creatEnemy();
-        boss.changeHP(50*bossFlag);
+
+        //设置boss出场特效线程
+        new Thread(()->{
+            bossAppearance = true;
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            bossAppearance = false;
+        }).start();
         return boss;
     }
 }

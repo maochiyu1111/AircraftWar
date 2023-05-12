@@ -40,7 +40,6 @@ public class MusicThread extends Thread {
     }
 
     public void setStop(boolean stop) {
-
         synchronized (this){
             this.isStop = stop;
         }

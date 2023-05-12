@@ -8,8 +8,8 @@ package edu.hitsz.application;
 
 public class VideoManager {
 
-    public static final String BGM_VIDEO = "src/videos/bgm.wav";
-    public static final String BOSS_VIDEO = "src/videos/bgm_boss.wav";
+    public static final String BGM_VIDEO = "src/videos/bgm_太空电梯.wav";
+    public static final String BOSS_VIDEO = "src/videos/bgm_boss_newyork.wav";
     public static final String BOMB_EXPLOSION_VIDEO = "src/videos/bomb_explosion.wav";
     public static final String BULLET_SHOOT_VIDEO = "src/videos/bullet.wav";
     public static final String BULLET_HIT_VIDEO = "src/videos/bullet_hit.wav";

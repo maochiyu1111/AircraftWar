@@ -54,6 +54,10 @@ public abstract class AbstractFlyingObject {
     protected int height = -1;
 
 
+    public boolean isValid() {
+        return isValid;
+    }
+
     /**
      * 有效（生存）标记，
      * 通常标记为 false的对象会在下次刷新时清除

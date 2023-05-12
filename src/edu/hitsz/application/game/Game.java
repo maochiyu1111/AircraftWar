@@ -82,7 +82,9 @@ public abstract class Game extends JPanel {
     /**
      * 当前时刻
      */
-    private int time = 0;
+    protected int time = 0;
+
+    protected int timeThreshold = 10000;
 
     /**
      * 周期（ms)
@@ -117,6 +119,13 @@ public abstract class Game extends JPanel {
      * 游戏结束标志
      */
     private boolean gameOverFlag = false;
+
+    protected boolean bossAppearance = false;
+
+    private boolean isPaintBossBloodBar = false;
+
+    private int BOSS_MAX_HP;
+
 
     public Game() {
         enemyAircrafts = new LinkedList<>();
@@ -175,6 +184,9 @@ public abstract class Game extends JPanel {
 
                 // 分数检测
                 scoreCheckAction();
+
+                //时间检测
+                timeCheckAction();
 
 
                 // 音效检测
@@ -268,6 +280,8 @@ public abstract class Game extends JPanel {
 
 
     protected abstract void convertShootFlag();
+
+    protected abstract void timeCheckAction();
 
     private void bulletsMoveAction() {
         for (BaseBullet bullet : heroBullets) {
@@ -461,8 +475,19 @@ public abstract class Game extends JPanel {
         g.drawImage(ImageManager.HERO_IMAGE, heroAircraft.getLocationX() - ImageManager.HERO_IMAGE.getWidth() / 2,
                 heroAircraft.getLocationY() - ImageManager.HERO_IMAGE.getHeight() / 2, null);
 
+
+        if (bossAppearance) {
+                g.drawImage(ImageManager.TEST_IMAGE,
+                        -40,
+                        70,
+                        null);
+        }
+
         //绘制得分和生命值
         paintScoreAndLife(g);
+
+        //绘制血条
+        paintBossBloodBar(g);
 
     }
 
@@ -487,6 +512,33 @@ public abstract class Game extends JPanel {
         g.drawString("SCORE:" + this.score, x, y);
         y = y + 20;
         g.drawString("LIFE:" + this.heroAircraft.getHp(), x, y);
+    }
+
+    private void paintBossBloodBar(Graphics g) {
+        boolean canPaint = false;
+        try {
+            if(boss.isValid()){
+                canPaint = true;
+            }
+        } catch (Exception ex){
+            canPaint = false;
+        }
+
+        if(canPaint){
+            if(!isPaintBossBloodBar){
+                BOSS_MAX_HP = boss.getHp();
+                isPaintBossBloodBar = true;
+            }
+            g.setColor(Color.white);
+            g.fillRect(boss.getLocationX() - 50, boss.getLocationY() + 100, 100, 10);
+            int percentage = (int) (boss.getHp() * 100.0 / BOSS_MAX_HP) ;
+            g.setColor(Color.red);
+            g.fillRect(boss.getLocationX() - 50, boss.getLocationY() + 100, percentage, 10);
+        } else {
+            isPaintBossBloodBar = false;
+        }
+
+
     }
 
 

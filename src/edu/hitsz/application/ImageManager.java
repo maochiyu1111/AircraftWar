@@ -45,6 +45,8 @@ public class ImageManager {
     public static BufferedImage FIREPOWER_PROP_IMAGE;
     public static BufferedImage HP_ADD_PROP_IMAGE;
 
+    public static BufferedImage TEST_IMAGE;
+
 
     static {
         try {
@@ -60,6 +62,7 @@ public class ImageManager {
             BOMB_PROP_IMAGE = ImageIO.read(new FileInputStream("src/images/prop_bomb.png"));
             FIREPOWER_PROP_IMAGE = ImageIO.read(new FileInputStream("src/images/prop_bullet.png"));
             HP_ADD_PROP_IMAGE = ImageIO.read(new FileInputStream("src/images/prop_blood.png"));
+            TEST_IMAGE = ImageIO.read(new FileInputStream("src/images/boss_appear.png"));
 
 
             CLASSNAME_IMAGE_MAP.put(HeroAircraft.class.getName(), HERO_IMAGE);
@@ -72,6 +75,7 @@ public class ImageManager {
             CLASSNAME_IMAGE_MAP.put(BombProp.class.getName(), BOMB_PROP_IMAGE);
             CLASSNAME_IMAGE_MAP.put(FirepowerProp.class.getName(), FIREPOWER_PROP_IMAGE);
             CLASSNAME_IMAGE_MAP.put(HpAddProp.class.getName(), HP_ADD_PROP_IMAGE);
+            // CLASSNAME_IMAGE_MAP.put(Test.class.getName(), TEST_IMAGE);
 
         } catch (IOException e) {
             e.printStackTrace();

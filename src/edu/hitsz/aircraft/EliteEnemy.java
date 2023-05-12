@@ -36,6 +36,10 @@ public class EliteEnemy extends AbstractAircraft implements Observer {
 
     private boolean IsProducible = true;
 
+    private static final double BOMB_PROP_THRESHOLD = 0.15;
+    private static final double FIREPOWER_PROP_THRESHOLD = 0.4;
+    private static final double HP_ADD_PROP_THRESHOLD = 0.9;
+
 
     public EliteEnemy(int locationX, int locationY, int speedX, int speedY, int hp) {
         super(locationX, locationY, speedX, speedY, hp);
@@ -59,15 +63,13 @@ public class EliteEnemy extends AbstractAircraft implements Observer {
         if(isProducible()){
             double randNum = Math.random();
             PropFactory propFactory = null;
-            if(randNum < 0.3){
+            if (randNum < BOMB_PROP_THRESHOLD) {
                 propFactory = new BombPropFactory();
-            } else if (0.3 < randNum && randNum < 0.6) {
+            } else if (BOMB_PROP_THRESHOLD <= randNum && randNum < FIREPOWER_PROP_THRESHOLD) {
                 propFactory = new FirepowerPropFactory();
-            }
-            else if(0.6< randNum && randNum < 0.9){
+            } else if (FIREPOWER_PROP_THRESHOLD <= randNum && randNum < HP_ADD_PROP_THRESHOLD) {
                 propFactory = new HpAddPropFactory();
-            }
-            else {
+            } else {
                 return null;
             }
             return propFactory.creatProp(this.locationX, this.locationY);
@@ -77,6 +79,8 @@ public class EliteEnemy extends AbstractAircraft implements Observer {
         }
 
     }
+
+
 
     @Override
     public void update() {

@@ -24,6 +24,11 @@ public class EasyGame extends Game{
     }
 
     @Override
+    protected void timeCheckAction() {
+
+    }
+
+    @Override
     protected void scoreCheckAction() {}
 
 
