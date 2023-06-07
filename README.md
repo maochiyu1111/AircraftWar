@@ -24,25 +24,25 @@
 
 **敌机类**
 
-<img src="assets/image-20230606232819098.png" alt="image-20230606232819098" style="zoom:50%;" />
+<img src="assets/image-20230606232819098.png" alt="image-20230606232819098" width="700" />
 
 ### 2.3 策略模式
 
 发射子弹的方式有直射和散射两种。精英敌机、英雄机和boss机都需要使用shoot方法来发射子弹，因此这里的应用场景需要使用策略模式来处理不同的发射子弹方式。
 
-![image-20230606232916047](assets/image-20230606232916047.png)
+<img src="assets/image-20230606232916047.png" alt="image-20230606232916047" width="800" />
 
 ### 2.4 数据访问对象模式
 
 使用DAO模式来管理用户数据，包括将游戏结束时的用户名、分数和游戏时间写入文件中以保存，以及从文件中读取所有用户的游戏信息并按照分数进行排名。
 
-<img src="assets/image-20230606233133473.png" alt="image-20230606233133473" style="zoom:50%;" />
+<img src="assets/image-20230606233133473.png" alt="image-20230606233133473" width="400" />
 
 ### 2.5 观察者模式
 
 应用场景是炸弹道具的实现。当玩家获得炸弹道具时，需要消灭所有非boss敌机并获取相应的分数，同时让所有敌机的子弹消失。根据不同的对象写不同的update函数，如boss机只是减生命值，而其他敌机都被炸死，并且增加相应分数。
 
-<img src="assets/image-20230606233248620.png" alt="image-20230606233248620" style="zoom:50%;" />
+<img src="assets/image-20230606233248620.png" alt="image-20230606233248620" width="600" />
 
 ### 2.6 模板模式
 
@@ -86,7 +86,7 @@
 
  
 
-<img src="assets/image-20230606233449011.png" alt="image-20230606233449011" style="zoom: 50%;" />
+<img src="assets/image-20230606233449011.png" alt="image-20230606233449011" width="500" />
 
  
 
@@ -98,7 +98,7 @@
 
 **主菜单界面**
 
-<img src="assets/image-20230607112849155.png" alt="image-20230607112849155" style="zoom:50%;" />
+<img src="assets/image-20230607112849155.png" alt="image-20230607112849155" width="300" />
 
 
 
