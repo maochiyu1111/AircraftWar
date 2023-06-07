@@ -1,0 +1,38 @@
+@startuml
+interface Observer {
++ void update()
+}
+class MobEnemy {
+
++ void update()
+}
+class EnemyBullet {
++ void update()
+}
+class EliteEnemy {
++ void update()
+}
+interface Publisher {
++ void subscribe(AbstractFlyingObject)
++ void unsubscribe()
++ void notifyObservers()
+}
+class BombProp {
+- List<AbstractFlyingObject> observers
++ void takeEffect()
++ void subscribe(AbstractFlyingObject)
++ void unsubscribe()
++ void notifyObservers()
+}
+class BossEnemy {
++ void update()
+}
+
+
+Observer <|.. MobEnemy
+Observer <|.. EnemyBullet
+Observer <|.. EliteEnemy
+Publisher <|.. BombProp
+Observer <|.. BossEnemy
+Observer <- Publisher
+@enduml

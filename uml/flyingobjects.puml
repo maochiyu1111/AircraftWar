@@ -1,0 +1,136 @@
+@startuml
+class MobEnemy {
+- int power
+- int direction
+- ShootingStrategy strategy
++ List<BaseBullet> shoot()
++ void forward()
++ void update()
+}
+class EnemyBullet {
++ void update()
+}
+class EliteEnemy {
+- int power
+- int direction
+- ShootingStrategy strategy
+- boolean IsProducible
+- {static} double BOMB_PROP_THRESHOLD
+- {static} double FIREPOWER_PROP_THRESHOLD
+- {static} double HP_ADD_PROP_THRESHOLD
++ boolean isProducible()
++ void setProducible(boolean)
++ void forward()
++ List<BaseBullet> shoot()
++ GameProp creatProp()
++ void update()
+}
+abstract class GameProp {
++ void forward()
++ {abstract}void takeEffect()
+}
+class HeroBullet {
+}
+class BaseBullet {
+- int power
++ void forward()
++ int getPower()
+}
+class HeroAircraft {
+- ShootingStrategy strategy
+- int shootNum
+- int power
+- int direction
+- {static} HeroAircraft heroAircraft
++ {static} HeroAircraft getInstance()
++ void forward()
++ List<BaseBullet> shoot()
++ void hpAdding(int)
++ void changeShootNum(int)
++ void setStrategy(ShootingStrategy)
+}
+class BombProp {
+- List<AbstractFlyingObject> observers
++ void takeEffect()
++ void subscribe(AbstractFlyingObject)
++ void unsubscribe()
++ void notifyObservers()
+}
+abstract class AbstractAircraft {
+# int maxHp
+# int hp
++ void decreaseHp(int)
++ int getHp()
++ {abstract}List<BaseBullet> shoot()
++ void changeHP(int)
+}
+class BossEnemy {
+- int power
+- int direction
+- int shootNum
+- int propNum
+- ShootingStrategy strategy
++ void changeShootNum(int)
++ void forward()
++ List<BaseBullet> shoot()
++ List<GameProp> creatProps()
++ void update()
+}
+class FirepowerProp {
+- HeroAircraft heroAircraft
+- Timer timer
+- boolean isEffective
+~ PowerUp powerUp
++ void takeEffect()
+}
+
+
+
+abstract class AbstractFlyingObject {
+# int locationX
+# int locationY
+# int speedX
+# int speedY
+# BufferedImage image
+# int width
+# int height
+# boolean isValid
++ boolean isValid()
++ void forward()
++ boolean crash(AbstractFlyingObject)
++ int getLocationX()
++ int getLocationY()
++ void setLocation(double,double)
++ int getSpeedY()
++ int getSpeedX()
++ BufferedImage getImage()
++ int getWidth()
++ int getHeight()
++ boolean notValid()
++ void vanish()
+}
+class HpAddProp {
+- HeroAircraft heroAircraft
++ void takeEffect()
+}
+
+
+Observer <|.. MobEnemy
+AbstractAircraft <|-- MobEnemy
+Observer <|.. EnemyBullet
+BaseBullet <|-- EnemyBullet
+Observer <|.. EliteEnemy
+AbstractAircraft <|-- EliteEnemy
+AbstractFlyingObject <|-- GameProp
+BaseBullet <|-- HeroBullet
+AbstractFlyingObject <|-- BaseBullet
+AbstractAircraft <|-- HeroAircraft
+Publisher <|.. BombProp
+GameProp <|-- BombProp
+AbstractFlyingObject <|-- AbstractAircraft
+Observer <|.. BossEnemy
+AbstractAircraft <|-- BossEnemy
+GameProp <|-- FirepowerProp
+
+GameProp <|-- HpAddProp
+@enduml

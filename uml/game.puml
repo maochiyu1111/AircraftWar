@@ -1,0 +1,61 @@
+@startuml
+class HardGame {
+- int bossFlag
+- boolean hasChangedBg
+- int thresholdInterval
+# void convertShootFlag()
+# void scoreCheckAction()
+# void timeCheckAction()
+- AbstractAircraft bossProduce()
+}
+
+abstract class Game {
+# int timeInterval
+# boolean enemyShootFlag
+# boolean heroShootFlag
+# double elitePosibility
++ {static} double speedMultiplier
++ {static} double HPMultiplier
+# int enemyMaxNumber
+# {static} int score
+# int threshold
+# int time
+# int timeThreshold
+# int cycleDuration
+# int cycleTime
+- {static} String difficulty
+# boolean bossAppearance
++ {static} void setDifficulty(String)
++ {static} String getDifficulty()
++ void action()
+- boolean timeCountAndNewCycleJudge()
++ AbstractAircraft produceEnemy()
++ void shootAction()
+# {abstract}void convertShootFlag()
+# {abstract}void timeCheckAction()
+- void bulletsMoveAction()
+- void aircraftsMoveAction()
++ void propMoveAction()
+- void crashCheckAction()
+# {abstract}void scoreCheckAction()
+- void musicCheck()
+- void postProcessAction()
+}
+class MediumGame {
+- int thresholdInterval
+# void convertShootFlag()
+# void timeCheckAction()
+# void scoreCheckAction()
+- AbstractAircraft bossProduce()
+}
+class EasyGame {
+# void convertShootFlag()
+# void timeCheckAction()
+# void scoreCheckAction()
+}
+
+
+Game <|-- HardGame
+Game <|-- MediumGame
+Game <|-- EasyGame
+@enduml

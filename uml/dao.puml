@@ -26,5 +26,5 @@ interface Serializable{}
 
 UserDao <|.. UserDaoImp
 Serializable <|.. User
-User <--- UserDaoImp
+User <- UserDaoImp
 @enduml
